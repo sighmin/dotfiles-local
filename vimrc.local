@@ -1,0 +1,203 @@
+"""""""""""""""""""""""
+"       General       "
+"""""""""""""""""""""""
+" Enable default clipboard to system clipboard
+set clipboard=unnamed
+" Offset when scrolling a file larger than window
+set scrolloff=3
+" Enable copying of text using mouse
+set mouse=a
+" More advanced mouse support (drag etc)
+if has('mouse_sgr')
+  set ttymouse=sgr
+endif
+
+" Shortcuts for tab navigation
+nnoremap tn :tabnew<cr>
+nnoremap tc :tabclose<cr>
+
+" Conventient mapping of :Q to :q for mistakes while trying to quit
+command! Q q
+command! Qall qall
+command! W w
+command! Wa wall
+
+" Convenient mappings for vim commands
+map <leader>ve :e ~/dotfiles-local/vimrc.local<cr>
+map <leader>te :e ~/dotfiles-local/tmux.conf.local<cr>
+map <leader>ze :e ~/dotfiles-local/zshrc.local<cr>
+
+"""""""""""""""""""""
+"     Colorizer     "
+"""""""""""""""""""""
+let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
+
+"""""""""""""""""""""""
+"       Testing       "
+"""""""""""""""""""""""
+" vim-test strategy
+let test#strategy = "tslime"
+
+"""""""""""""""""""""""
+"       Airline       "
+"""""""""""""""""""""""
+" Configure airline
+let g:airline_powerline_fonts = 2
+let g:airline_theme = 'base16'
+
+"""""""""""""""""""""""
+" Color Configuration "
+"""""""""""""""""""""""
+set background=light
+colorscheme PaperColor
+set termguicolors
+
+""""""""""""""""""""
+"    LocalVimRc    "
+""""""""""""""""""""
+let g:localvimrc_ask = 0
+let g:localvimrc_whitelist = $HOME . '/Code/.*'
+
+"""""""""""""""""""""
+"       fzf         "
+"""""""""""""""""""""
+nmap <C-p> :Files<CR>
+
+"""""""""""""""""""""
+"     NERDTree      "
+"""""""""""""""""""""
+" Toggle nerd tree
+map <leader>n :NERDTreeTabsToggle<cr>
+
+"""""""""""""""""""""
+"      Tagbar       "
+"""""""""""""""""""""
+" Toggle tagbar
+map <leader>b :TagbarToggle<cr>
+
+"""""""""""""""""""""
+"     EasyTags      "
+"""""""""""""""""""""
+" Set local tags file for increased speed
+set tags='./tags'
+let g:easytags_dynamic_files=2
+" Do not automatically update highlights (slows things down)
+let g:easytags_auto_highlight=0
+let g:easytags_syntax_keyword = 'always'
+let g:easytags_auto_highlight = 0
+let g:easytags_auto_update = 0
+
+"""""""""""""""""""""""
+"  TMUX + Vim cursor  "
+"""""""""""""""""""""""
+" Add change in cursor when in vim in tmux
+if exists('$TMUX')
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
+
+" Consistent navigation between vim & tmux - this is absolutely awesome
+" Source http://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
+if exists('$TMUX')
+  " If 'tmate' is in the $TMUX variable string, we're in tmate, not tmux
+  if index(split($TMUX, '\W\+'), "tmux") == -1
+    let multiplexer = 'tmate'
+  else
+    let multiplexer = 'tmux'
+  endif
+
+  function! MultiplexerOrSplitSwitch(wincmd, tmuxdir, multiplexer)
+    let previous_winnr = winnr()
+    silent! execute "wincmd " . a:wincmd
+    if previous_winnr == winnr()
+      call system(a:multiplexer . " select-pane -" . a:tmuxdir)
+      redraw!
+    endif
+  endfunction
+
+  let previous_title = substitute(system(multiplexer . " display-message -p '#{pane_title}'"), '\n', '', '')
+  let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
+  let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
+
+  nnoremap <silent> <c-h> :call MultiplexerOrSplitSwitch('h', 'L', multiplexer)<cr>
+  nnoremap <silent> <c-j> :call MultiplexerOrSplitSwitch('j', 'D', multiplexer)<cr>
+  nnoremap <silent> <c-k> :call MultiplexerOrSplitSwitch('k', 'U', multiplexer)<cr>
+  nnoremap <silent> <c-l> :call MultiplexerOrSplitSwitch('l', 'R', multiplexer)<cr>
+else
+  " No tmux session, so navigate panes with <c-hjkl>
+  map <c-h> <c-w>h
+  map <c-j> <c-w>j
+  map <c-k> <c-w>k
+  map <c-l> <c-w>l
+endif
+
+"""""""""""""""""""""
+"        Ale        "
+"""""""""""""""""""""
+let g:airline#extensions#ale#enabled = 1
+let g:ale_sign_error = '→'
+let g:ale_sign_warning = '→'
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
+
+let g:ale_fixers = {
+\   'ruby':  [],
+\   'elixir':  [],
+\   'typescript': ['prettier'],
+\   'javascript': ['prettier'],
+\   'jsx': [],
+\   'css': [],
+\   'scss': [],
+\   'go': ['gofmt'],
+\ }
+
+let g:ale_linters = {
+\   'javascript': ['prettier'],
+\   'typescript': ['prettier'],
+\   'jsx': [],
+\   'css': [],
+\   'scss': [],
+\   'elixir': [],
+\   'ruby': [],
+\   'html': [],
+\   'markdown': [],
+\   'go': ['gofmt'],
+\}
+
+function! AddLinterIfFileExists(lang, linter, file, lint, fix)
+  let l:current = g:ale_linters[a:lang]
+
+  if filereadable(a:file) && index(l:current, a:linter) == -1
+    if a:lint
+      let g:ale_linters[a:lang] = g:ale_linters[a:lang] + [a:linter]
+    endif
+    if a:fix
+      let g:ale_fixers[a:lang] = g:ale_fixers[a:lang] + [a:linter]
+    end
+  endif
+endfunction
+
+call AddLinterIfFileExists('javascript', 'eslint', '.eslintrc.json', 1, 1)
+call AddLinterIfFileExists('javascript', 'eslint', '.eslintrc', 1, 1)
+call AddLinterIfFileExists('javascript', 'standard', 'node_modules/.bin/standard', 1, 1)
+call AddLinterIfFileExists('css', 'stylelint', '.stylelintrc', 1, 1)
+call AddLinterIfFileExists('scss', 'stylelint', '.stylelintrc', 1, 1)
+call AddLinterIfFileExists('scss', 'scss-lint', '.scss-lint.yml', 1, 1)
+call AddLinterIfFileExists('ruby', 'rubocop', '.rubocop.yml', 1, 1)
+call AddLinterIfFileExists('elixir', 'credo', 'config/.credo.exs', 1, 0)
+call AddLinterIfFileExists('elixir', 'credo', '.credo.exs', 1, 0)
+
+"""""""""""""""""""""
+"      AutoCMD      "
+"""""""""""""""""""""
+augroup turbo
+  autocmd!
+  " Remove trailing whitespaces on save
+  autocmd BufWritePre * :%s/\s\+$//e
+
+  " Do not auto-enable spellcheck on markdown files
+  autocmd FileType markdown setlocal nospell
+augroup END

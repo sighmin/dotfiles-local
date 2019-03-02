@@ -1,0 +1,23 @@
+" Multi-cursor
+Plug 'terryma/vim-multiple-cursors'
+" Send a buffer to tmux
+Plug 'jgdavey/tslime.vim'
+" Local vim config
+Plug 'embear/vim-localvimrc'
+" Great collection of colour schemes for vim
+Plug 'flazz/vim-colorschemes'
+" Fuzzy search with fzf: this manages fzf installation as well
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+" Highlight hex color codes
+Plug 'chrisbra/Colorizer'
+" Easy multi line commenting (try <leader>ci )
+Plug 'ddollar/nerdcommenter'
+" Awesome directory listings (try <leader>n )
+Plug 'scrooloose/nerdtree'
+" Browse ctags in a bar
+Plug 'majutsushi/tagbar'
+" Auto ctags update
+Plug 'xolox/vim-easytags'
+" Dependency of xolox's vim plugins
+Plug 'xolox/vim-misc'

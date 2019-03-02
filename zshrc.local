@@ -1,0 +1,152 @@
+# Look for executables in ./bin
+export PATH=./bin:$PATH
+# Kill the lag
+export KEYTIMEOUT=1
+
+# Autocomplete options...
+# Move cursor to end if word had one match
+setopt always_to_end
+# Change directory by typing directory name if it's not a command
+setopt auto_cd
+
+# Configure history
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=2500
+export SAVEHIST=$HISTSIZE
+# Remove older duplicate entries from history
+setopt hist_ignore_all_dups
+# Remove superfluous blanks from history items
+setopt hist_reduce_blanks
+# Share history between different instances of the shell
+setopt share_history
+
+# Git & Github shortcuts
+gg() {
+  git add -A .
+  git commit -m "$@"
+  gpoc -f
+}
+gh() {
+  repo=$(git remote -v | head -1 | sed "s/git@github.com://" | cut -c8-999 | sed
+  "s/\.git .*//")
+  echo Opening Github for "$repo"
+  open "https://github.com/$repo"
+}
+current_branch() {
+  git branch | grep "\*" | cut -d ' ' -f2
+}
+# push origin current_branch
+gpoc() {
+  echo Pushing "$(current_branch)"
+  git push origin "$(current_branch)" "$@"
+}
+
+# pull origin current_branch
+gloc() {
+  echo "Pulling $(current_branch)"
+  git pull origin "$(current_branch)"
+}
+
+# pull origin master
+glom() {
+  echo Pulling master
+  git pull origin master
+}
+
+# pull origin develop
+glod() {
+  echo Pulling develop
+  git pull origin develop
+}
+
+# create pull request into specified branch (develop if none specified)
+gpr() {
+  echo "Opening pull request for $(current_branch)"
+  repo=$(git remote -v | grep origin | head -1 | sed "s/git@github.com://" | cut
+  c8-999 | sed "s/\.git .*//")
+  branch=""
+  if [ "$1" ]; then
+    branch="$1...$(current_branch)"
+  else
+    branch="master...$(current_branch)"
+  fi
+
+  open "https://github.com/$repo/compare/$branch?expand=1"
+}
+
+# tmuxinator shortcut
+tx() {
+  tmuxinator start "$@"
+}
+
+# Foreground vim with ctrl-z
+foreground-vi() {
+  fg %vi
+}
+zle -N foreground-vi
+bindkey '^Z' foreground-vi
+
+# Fuzzy cd with z.sh
+# shellcheck disable=SC1090
+. "$HOME/dotfiles-local/vendor/z.sh"
+
+# Fuzzy search with fzf
+# shellcheck disable=SC1090
+[ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
+
+# Tab autocomplete
+LUNCHY_DIR="$(dirname "$(gem which lunchy)")/../extras"
+# shellcheck disable=SC1090
+if [ -f "$LUNCHY_DIR/lunchy-completion.zsh" ]; then
+  . "$LUNCHY_DIR/lunchy-completion.zsh"
+fi
+
+# Setup zsh-autosuggestions
+# shellcheck disable=SC1090
+. "$HOME/dotfiles-local/vendor/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# Setup zsh-syntax-highlighting
+# shellcheck disable=SC1090
+. "$HOME/dotfiles-local/vendor/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# I literally only setup antibody so that I could use spaceship prompt.
+# Unfortunately I couldn't get it to work as a manual install.
+# shellcheck disable=SC1090
+source <(antibody init)
+antibody bundle denysdovhan/spaceship-prompt
+
+# Prompt customisation
+export SPACESHIP_PROMPT_ORDER=(
+  time          # Time stampts section
+  user          # Username section
+  host          # Hostname section
+  dir           # Current directory section
+  git           # Git section (git_branch + git_status)
+  #hg            # Mercurial section (hg_branch  + hg_status)
+  #package       # Package version
+  #node          # Node.js section
+  #ruby          # Ruby section
+  #elixir        # Elixir section
+  #xcode         # Xcode section
+  #swift         # Swift section
+  #golang        # Go section
+  #php           # PHP section
+  #rust          # Rust section
+  #haskell       # Haskell Stack section
+  #julia         # Julia section
+  #docker        # Docker section
+  #aws           # Amazon Web Services section
+  #venv          # virtualenv section
+  #conda         # conda virtualenv section
+  #pyenv         # Pyenv section
+  #dotnet        # .NET section
+  #ember         # Ember.js section
+  #kubecontext   # Kubectl context section
+  exec_time     # Execution time
+  line_sep      # Line break
+  #battery       # Battery level and status
+  #vi_mode       # Vi-mode indicator
+  jobs          # Backgound jobs indicator
+  exit_code     # Exit code section
+  char          # Prompt character
+)

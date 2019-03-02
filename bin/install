@@ -1,0 +1,69 @@
+#!/usr/bin/env sh
+
+set -e # exit if something fails
+
+. helpers
+
+pinfo "[terminal]: Installing antibody..."
+if not_installed antibody; then
+  brew install getantibody/tap/antibody
+  echo "Done"
+else
+  echo "Already done."
+fi
+
+pinfo "[terminal]: Installing z.sh..."
+if [ -f vendor/z.sh ]; then
+  echo "Already done."
+else
+  curl https://raw.githubusercontent.com/rupa/z/master/z.sh > vendor/z.sh
+  echo "Done"
+fi
+
+pinfo "[terminal]: Installing zsh-autosuggestions..."
+if [ -d vendor/zsh-autosuggestions ]; then
+  echo "Already done."
+else
+  mkdir vendor/zsh-autosuggestions
+  git clone https://github.com/zsh-users/zsh-autosuggestions.git vendor/zsh-autosuggestions/
+  echo "Done"
+fi
+
+pinfo "[terminal]: Installing zsh-syntax-highlighting..."
+if [ -d vendor/zsh-syntax-highlighting ]; then
+  echo "Already done."
+else
+  mkdir vendor/zsh-syntax-highlighting
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git vendor/zsh-syntax-highlighting/
+  echo "Done"
+fi
+
+pinfo "[terminal]: Installing ruby gem: tmuxinator..."
+if not_installed tmuxinator; then
+  gem install tmuxinator
+  echo "Done"
+else
+  echo "Already done."
+fi
+
+pinfo "[terminal]: Installing ruby gem: lunchy..."
+if not_installed lunchy; then
+  gem install lunchy 1> /dev/null
+  echo "Done"
+else
+  echo "Already done."
+fi
+
+pinfo "[vim]: Installing vim deps..."
+echo "TODO"
+
+pinfo "[tmux]: Installing tmux deps..."
+echo "TODO"
+
+# REMOVE ME
+exit 1
+
+pinfo "[terminal]: Symlinking local files..."
+cd && rcup
+
+psuccess "Success!"
