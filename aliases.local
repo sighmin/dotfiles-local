@@ -3,5 +3,6 @@ alias v=vim
 alias ss='spring stop'
 alias zrc='$EDITOR ~/dotfiles-local/zshrc.local'
 alias vrc='$EDITOR ~/dotfiles-local/vimrc.local'
+alias vbrc='$EDITOR ~/dotfiles-local/vimrc.bundles.local'
 alias trc='$EDITOR ~/dotfiles-local/tmux.conf.local'
-alias gaa="git add -A ."
+alias :q=exit

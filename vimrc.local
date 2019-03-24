@@ -3,6 +3,12 @@
 """""""""""""""""""""""
 " Enable default clipboard to system clipboard
 set clipboard=unnamed
+" Highlight matching braces
+set showmatch
+" Line highlighting
+set cursorline
+" Highlight current top result of search
+set hlsearch
 " Offset when scrolling a file larger than window
 set scrolloff=3
 " Enable copying of text using mouse
@@ -11,21 +17,45 @@ set mouse=a
 if has('mouse_sgr')
   set ttymouse=sgr
 endif
+" (Hopefully) removes the delay when hitting esc in insert mode
+set noesckeys
+set notimeout
+set ttimeout
+set ttimeoutlen=1
+" Hit <tab> to see all available commands
+" Try :color <tab> to see what I mean
+set wildmenu
+" Wildignore files I don't want to ever open in vim
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/bower_components/*
+" Maintain undo history for each buffer between vim sessions
+set undofile
+set undodir=~/.vim/undodir
 
 " Shortcuts for tab navigation
 nnoremap tn :tabnew<cr>
 nnoremap tc :tabclose<cr>
+
+" Save and exit shortcuts
+nnoremap <leader>w :w<CR>
+nnoremap <leader>wq :wq<CR>
+nnoremap <leader>q :q<CR>
+
+" Clear the search buffer when hitting return
+nnoremap <cr> :nohlsearch<cr>
 
 " Conventient mapping of :Q to :q for mistakes while trying to quit
 command! Q q
 command! Qall qall
 command! W w
 command! Wa wall
+command! Wq wq
 
 " Convenient mappings for vim commands
 map <leader>ve :e ~/dotfiles-local/vimrc.local<cr>
+map <leader>vbe :e ~/dotfiles-local/vimrc.bundles.local<cr>
 map <leader>te :e ~/dotfiles-local/tmux.conf.local<cr>
 map <leader>ze :e ~/dotfiles-local/zshrc.local<cr>
+map <leader>ge :e ~/dotfiles-local/gitconfig.local<cr>
 
 """""""""""""""""""""
 "     Colorizer     "
@@ -42,6 +72,7 @@ let test#strategy = "tslime"
 "       Airline       "
 """""""""""""""""""""""
 " Configure airline
+"let g:airline_powerline_fonts = 1
 let g:airline_powerline_fonts = 2
 let g:airline_theme = 'base16'
 
@@ -58,6 +89,11 @@ set termguicolors
 let g:localvimrc_ask = 0
 let g:localvimrc_whitelist = $HOME . '/Code/.*'
 
+""""""""""""""""""""
+"   Search files   "
+""""""""""""""""""""
+let g:ctrlp_working_path_mode = 0
+
 """""""""""""""""""""
 "       fzf         "
 """""""""""""""""""""
@@ -67,7 +103,9 @@ nmap <C-p> :Files<CR>
 "     NERDTree      "
 """""""""""""""""""""
 " Toggle nerd tree
-map <leader>n :NERDTreeTabsToggle<cr>
+let NERDTreeShowHidden=1
+map <leader>n :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 """""""""""""""""""""
 "      Tagbar       "
@@ -79,13 +117,13 @@ map <leader>b :TagbarToggle<cr>
 "     EasyTags      "
 """""""""""""""""""""
 " Set local tags file for increased speed
-set tags='./tags'
-let g:easytags_dynamic_files=2
+"set tags='./tags'
+"let g:easytags_dynamic_files=2
 " Do not automatically update highlights (slows things down)
-let g:easytags_auto_highlight=0
-let g:easytags_syntax_keyword = 'always'
-let g:easytags_auto_highlight = 0
-let g:easytags_auto_update = 0
+"let g:easytags_auto_highlight=0
+"let g:easytags_syntax_keyword = 'always'
+"let g:easytags_auto_highlight = 0
+"let g:easytags_auto_update = 0
 
 """""""""""""""""""""""
 "  TMUX + Vim cursor  "
@@ -200,4 +238,37 @@ augroup turbo
 
   " Do not auto-enable spellcheck on markdown files
   autocmd FileType markdown setlocal nospell
+
+  " Check for external file changes
+  autocmd CursorHold,CursorMoved,BufEnter * checktime
 augroup END
+
+"""""""""""""""""""""
+"  Goyo + Limelight "
+"""""""""""""""""""""
+function! s:start_write_mode()
+  " Hide tmux status line when writing
+  silent !tmux set status off
+  silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  " Paragraph focus with limelight
+  " Limelight
+endfunction
+
+function! s:end_write_mode()
+  " Show tmux status line when exiting
+  silent !tmux set status on
+  silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  " Paragraph focus with limelight
+  " !Limelight
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>start_write_mode()
+autocmd! User GoyoLeave nested call <SID>end_write_mode()
+
+nmap <leader>w :Goyo<CR>
+
+"""""""""""""""""""""
+"    Ctrl-p & Ag    "
+"""""""""""""""""""""
+" Convenient mappings for CtrlP and ctags
+nmap <leader>[ :CtrlPTag<cr>

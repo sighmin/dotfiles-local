@@ -17,3 +17,18 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+[alias]
+	alias = config --get-regexp ^alias\\.
+  a = add
+  b = branch
+  c = commit
+  d = diff
+  l = log
+  ds = diff --stat
+  dc = diff --cached
+  p = push
+  pl = pull
+  am = commit --amend
+  rb = rebase --interactive
+  sta = stash
+  nuke = !git reset && git checkout -- . && git clean -fd

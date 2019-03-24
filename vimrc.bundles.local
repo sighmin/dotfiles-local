@@ -16,8 +16,26 @@ Plug 'ddollar/nerdcommenter'
 " Awesome directory listings (try <leader>n )
 Plug 'scrooloose/nerdtree'
 " Browse ctags in a bar
-Plug 'majutsushi/tagbar'
+" Plug 'majutsushi/tagbar'
 " Auto ctags update
 Plug 'xolox/vim-easytags'
 " Dependency of xolox's vim plugins
 Plug 'xolox/vim-misc'
+" User defined text-objects
+Plug 'kana/vim-textobj-user'
+" Handy ruby block selectors (try var and vir for 'around' and 'inside')
+Plug 'nelstrom/vim-textobj-rubyblock', { 'for': 'ruby' }
+" Awesome status line
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+" Markdown previews
+Plug 'shime/vim-livedown'
+" Distraction free writing
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+" Unobtrusiver highlighting of trailing whitespaces (:Trim)
+Plug 'csexton/trailertrash.vim'
+" Autoclosing of quotes, parentheses, brackets etc
+Plug 'Raimondi/delimitMate'
+" Begins tab completion with a single <tab> instead of c-x c-o
+Plug 'ervandew/supertab'
