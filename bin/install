@@ -4,6 +4,8 @@ set -e # exit if something fails
 
 . helpers
 
+./bin/mac-config
+
 pinfo "[terminal]: Installing antibody..."
 if not_installed antibody; then
   brew install getantibody/tap/antibody
