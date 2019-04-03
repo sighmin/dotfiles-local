@@ -6,6 +6,9 @@ set -e # exit if something fails
 
 ./bin/mac-config
 
+pinfo "[system]: Installing Brew bundle from Brewfile..."
+brew bundle
+
 pinfo "[terminal]: Installing antibody..."
 if not_installed antibody; then
   brew install getantibody/tap/antibody
@@ -61,9 +64,6 @@ echo "TODO"
 
 pinfo "[tmux]: Installing tmux deps..."
 echo "TODO"
-
-# REMOVE ME
-exit 1
 
 pinfo "[terminal]: Symlinking local files..."
 cd && rcup
