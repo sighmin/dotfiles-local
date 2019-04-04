@@ -67,6 +67,8 @@ let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
 """""""""""""""""""""""
 " vim-test strategy
 let test#strategy = "tslime"
+let g:tslime_always_current_session = 1
+let g:tslime_always_current_window = 1
 
 """""""""""""""""""""""
 "       Airline       "
