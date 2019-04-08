@@ -1,0 +1,102 @@
+#!/usr/bin/env zsh
+
+# Curtosy of Fernando!
+# https://github.com/justmendes/dotfiles/tree/master/bin
+
+# shellcheck disable=SC2039,SC2034,SC2059
+# For more info see the specifci check's wiki page
+# https://github.com/koalaman/shellcheck/wiki/SCxxxx
+
+SUCCESS_MSG="✓"
+FAILURE_MSG="✗"
+NO_CI_MSG="none running."
+
+PREFIX_MSG="[ci]:"
+WAITING_MSG="waiting..."
+CAR_RET=${#WAITING_MSG}
+
+CI_WAIT_SEC=2
+
+CI_PASSED=0
+CI_STATUS=0
+ASYNC_PROC=0
+
+function check_ci() {
+  local ci_status=$(hub ci-status)
+
+  while [[ $ci_status == "pending" ]];
+  do
+    sleep $CI_WAIT_SEC
+    ci_status=$(hub ci-status)
+  done
+
+  kill -s USR1 $$
+
+  # 0: CI passed
+  # 2: no CI running
+  # 1: Failed for any other reason
+  if [[ $ci_status == "success" ]];
+  then
+    exit 0
+  elif [[ $ci_status == "no status" ]];
+  then
+    exit 2
+  else
+    exit 1
+  fi
+}
+
+function TRAPUSR1() { wait $ASYNC_PROC
+  CI_STATUS=$?
+  CI_PASSED=1
+}
+
+function clear_input() {
+  for i in {1..$CAR_RET};
+  do
+    printf "  "
+  done
+}
+
+function spinner_round() {
+  spinner=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+
+  for spin in "${spinner[@]}";
+  do
+    printf "\r$PREFIX_MSG $spin $WAITING_MSG"
+    sleep 0.1
+  done
+}
+
+function pretty_print() {
+  printf "\r\e[38;05;$1m$2\e[m"
+}
+
+check_ci &
+ASYNC_PROC=$!
+
+while [ $CI_PASSED -eq 0 ];
+do
+  spinner_round
+done
+
+RED="001"
+GREEN="002"
+YELLOW="003"
+BLUE="004"
+
+if [ $CI_STATUS -eq 0 ];
+then
+  pretty_print $GREEN "$PREFIX_MSG $SUCCESS_MSG"
+elif [ $CI_STATUS -eq 2 ];
+then
+  pretty_print $BLUE "$PREFIX_MSG $NO_CI_MSG"
+  CI_STATUS=0
+else
+  pretty_print $RED "$PREFIX_MSG $FAILURE_MSG"
+fi
+
+clear_input
+echo ""
+
+exit $CI_STATUS

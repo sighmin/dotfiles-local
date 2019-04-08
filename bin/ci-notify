@@ -1,0 +1,38 @@
+#!/usr/bin/env zsh
+
+# Curtosy of Fernando!
+# https://github.com/justmendes/dotfiles/tree/master/bin
+
+loud_mode() {
+  [[ $# -eq 1 && $1 == "--loud" ]]
+}
+
+ci_result() {
+  _result=$(ci-wait)
+
+  case $? in
+    0)
+      msg="passed"
+      ;;
+    1)
+      msg="failed"
+      ;;
+    2)
+      msg="not running"
+      ;;
+  esac
+
+  echo $msg
+}
+
+notify_of() {
+  osascript -e "display notification \"CI $1\" with title \"CI $1\""
+}
+
+msg=$(ci_result)
+
+notify_of $msg
+
+if loud_mode $@; then
+  say "CI $msg"
+fi
