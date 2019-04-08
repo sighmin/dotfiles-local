@@ -24,6 +24,7 @@
   c = commit
   d = diff
   l = log
+  f = fetch
   ds = diff --stat
   dc = diff --cached
   p = push

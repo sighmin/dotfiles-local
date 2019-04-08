@@ -26,7 +26,7 @@ set ttimeoutlen=1
 " Try :color <tab> to see what I mean
 set wildmenu
 " Wildignore files I don't want to ever open in vim
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/bower_components/*
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/bower_components/*,test/reports/*
 " Maintain undo history for each buffer between vim sessions
 set undofile
 set undodir=~/.vim/undodir

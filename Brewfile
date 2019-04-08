@@ -7,6 +7,7 @@ tap "homebrew/core"
 tap "homebrew/services"
 tap "thoughtbot/formulae"
 tap "universal-ctags/universal-ctags"
+brew "awscli"
 brew "coreutils"
 brew "ctags", link: false
 brew "diff-so-fancy"
@@ -18,6 +19,7 @@ brew "libyaml"
 brew "postgresql", restart_service: true
 brew "reattach-to-user-namespace"
 brew "redis", restart_service: true
+brew "shellcheck"
 brew "the_silver_searcher"
 brew "tmux"
 brew "vim"
