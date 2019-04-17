@@ -275,3 +275,8 @@ nmap <leader>w :Goyo<CR>
 """""""""""""""""""""
 " Convenient mappings for CtrlP and ctags
 nmap <leader>[ :CtrlPTag<cr>
+
+"""""""""""""""""""""
+"     Livedown      "
+"""""""""""""""""""""
+nmap <leader>ld :LivedownToggle<cr>
