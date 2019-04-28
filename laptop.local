@@ -1,0 +1,36 @@
+#!/bin/sh
+
+fancy_echo "Installing additional brew packages ..."
+brew bundle --file=- <<EOF
+tap "getantibody/tap"
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+brew "awscli"
+brew "ctags", link: false
+brew "diff-so-fancy"
+brew "graphviz"
+brew "nmap"
+brew "shellcheck"
+brew "getantibody/tap/antibody"
+cask "1password"
+cask "google-chrome"
+cask "karabiner-elements"
+cask "ngrok"
+cask "postman"
+cask "spectacle"
+cask "spotify"
+cask "steam"
+EOF
+
+fancy_echo "Installing python ai toolkit ..."
+install_asdf_language "python"
+pip install tensorflow
+pip install keras
+pip install h5py
+pip install pydot
+
+if [ -r "$HOME/.rcrc" ]; then
+  fancy_echo "Updating dotfiles ..."
+  rcup
+fi
