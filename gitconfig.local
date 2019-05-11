@@ -34,3 +34,7 @@
   rb = rebase
   sta = stash
   nuke = !git reset && git checkout -- . && git clean -fd
+[credential]
+  helper = osxkeychain
+[gpg]
+  program = /usr/local/bin/gpg
