@@ -21,6 +21,7 @@ cask "postman"
 cask "spectacle"
 cask "spotify"
 cask "steam"
+cask "vlc"
 EOF
 
 fancy_echo "Installing python ai toolkit ..."
