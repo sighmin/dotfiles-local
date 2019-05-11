@@ -280,3 +280,9 @@ nmap <leader>[ :CtrlPTag<cr>
 "     Livedown      "
 """""""""""""""""""""
 nmap <leader>ld :LivedownToggle<cr>
+
+"""""""""""""""""""""
+"     EasyAlign     "
+"""""""""""""""""""""
+vmap <leader>= :EasyAlign*=<cr>
+au FileType markdown vmap <leader><Bslash> :EasyAlign*<Bar><cr>

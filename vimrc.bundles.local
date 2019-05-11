@@ -39,3 +39,5 @@ Plug 'csexton/trailertrash.vim'
 Plug 'Raimondi/delimitMate'
 " Begins tab completion with a single <tab> instead of c-x c-o
 Plug 'ervandew/supertab'
+" Align things
+Plug 'junegunn/vim-easy-align'

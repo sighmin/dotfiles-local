@@ -1,0 +1,103 @@
+
+#!/usr/bin/env zsh
+#
+# shellcheck disable=SC2086,SC2155,SC2059,SC2034
+#
+# Usage: ./bin/await-dns-validation.sh $SSL_CERTIFICATE_ARN
+#
+# Example: ./bin/await-dns-validation.sh arn:aws:acm:eu-west-2:333933334035:certificate/d331a632-531f-4335-8ll7-1b2286ba7375
+#
+# The argument is the aws resource name of the ssl certificate ($SSL_CERTIFICATE_ARN)
+
+SUCCESS_MSG="✓ Success"
+FAILURE_MSG="✗ Nope"
+NO_MSG="none running."
+
+WAITING_MSG="waiting..."
+CAR_RET=${#WAITING_MSG}
+
+WAIT_SEC=5
+
+PASSED=0
+STATUS=0
+ASYNC_PROC=0
+
+command_status=$($@)
+
+check_command() {
+  while [[ $command_status == "PENDING_VALIDATION" ]];
+  do
+    sleep $WAIT_SEC
+    command_status=$($@)
+  done
+
+  kill -s USR1 $$
+
+  # 0: CERT passed
+  # 2: no CERT running
+  # 1: Failed for any other reason
+  if [[ $command_status == "SUCCESS" ]];
+  then
+    exit 0
+  elif [[ $command_status == "ERROR" ]];
+  then
+    exit 2
+  else
+    exit 1
+  fi
+}
+
+TRAPUSR1() { wait $ASYNC_PROC
+  STATUS=$?
+  PASSED=1
+}
+
+clear_input() {
+  for i in {1..$CAR_RET};
+  do
+    printf "  "
+  done
+}
+
+spinner_round() {
+  spinner=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+
+  for spin in "${spinner[@]}";
+  do
+    printf "\r$spin $WAITING_MSG"
+    sleep 0.1
+  done
+}
+
+pretty_print() {
+  printf "\r\e[38;05;$1m$2\e[m"
+}
+
+check_command &
+ASYNC_PROC=$!
+
+while [ $PASSED -eq 0 ];
+do
+  spinner_round
+done
+
+RED="001"
+GREEN="002"
+YELLOW="003"
+BLUE="004"
+
+if [ $STATUS -eq 0 ];
+then
+  pretty_print $GREEN "$SUCCESS_MSG"
+elif [ $STATUS -eq 2 ];
+then
+  pretty_print $BLUE "$NO_MSG"
+  STATUS=0
+else
+  pretty_print $RED "$FAILURE_MSG"
+fi
+
+clear_input
+echo ""
+
+exit $STATUS
