@@ -274,7 +274,7 @@ nmap <leader>w :Goyo<CR>
 "    Ctrl-p & Ag    "
 """""""""""""""""""""
 " Convenient mappings for CtrlP and ctags
-nmap <leader>[ :CtrlPTag<cr>
+nmap <C-[> :CtrlPTag<cr>
 
 """""""""""""""""""""
 "     Livedown      "
