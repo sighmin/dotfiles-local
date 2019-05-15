@@ -1,13 +1,13 @@
-
 #!/usr/bin/env zsh
 #
 # shellcheck disable=SC2086,SC2155,SC2059,SC2034
 #
-# Usage: ./bin/await-dns-validation.sh $SSL_CERTIFICATE_ARN
+# Usage: ./bin/waitfor [cmd] <status-cmd> <status-success-value>
 #
-# Example: ./bin/await-dns-validation.sh arn:aws:acm:eu-west-2:333933334035:certificate/d331a632-531f-4335-8ll7-1b2286ba7375
+# Example: ./bin/waitfor "hub ci-status" success
 #
-# The argument is the aws resource name of the ssl certificate ($SSL_CERTIFICATE_ARN)
+# Wait for an asynchronous operation by providing the command (optional), a
+# status check command and a status check value
 
 SUCCESS_MSG="✓ Success"
 FAILURE_MSG="✗ Nope"
