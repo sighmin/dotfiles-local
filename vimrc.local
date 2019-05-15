@@ -91,16 +91,6 @@ set termguicolors
 let g:localvimrc_ask = 0
 let g:localvimrc_whitelist = $HOME . '/Code/.*'
 
-""""""""""""""""""""
-"   Search files   "
-""""""""""""""""""""
-let g:ctrlp_working_path_mode = 0
-
-"""""""""""""""""""""
-"       fzf         "
-"""""""""""""""""""""
-nmap <C-p> :Files<CR>
-
 """""""""""""""""""""
 "     NERDTree      "
 """""""""""""""""""""
@@ -271,10 +261,13 @@ autocmd! User GoyoLeave nested call <SID>end_write_mode()
 nmap <leader>w :Goyo<CR>
 
 """""""""""""""""""""
-"    Ctrl-p & Ag    "
+" Ctrl-p/fzf/ag/rg  "
 """""""""""""""""""""
 " Convenient mappings for CtrlP and ctags
-nmap <C-[> :CtrlPTag<cr>
+let g:ctrlp_working_path_mode = 0
+nmap <C-p> :CtrlP<cr>
+nmap <C-t> :CtrlPTag<cr>
+nmap <C-i> :BTags<cr>
 
 """""""""""""""""""""
 "     Livedown      "
