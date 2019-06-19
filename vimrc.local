@@ -241,16 +241,20 @@ augroup END
 """""""""""""""""""""
 function! s:start_write_mode()
   " Hide tmux status line when writing
-  silent !tmux set status off
-  silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  if exists('$TMUX')
+    silent !tmux set status off
+    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  endif
   " Paragraph focus with limelight
   " Limelight
 endfunction
 
 function! s:end_write_mode()
   " Show tmux status line when exiting
-  silent !tmux set status on
-  silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  if exists('$TMUX')
+    silent !tmux set status on
+    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  endif
   " Paragraph focus with limelight
   " !Limelight
 endfunction
