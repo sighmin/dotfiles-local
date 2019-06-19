@@ -30,6 +30,7 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/bower_components/*,t
 " Maintain undo history for each buffer between vim sessions
 set undofile
 set undodir=~/.vim/undodir
+set fillchars=vert:│
 
 " Shortcuts for tab navigation
 nnoremap tn :tabnew<cr>
