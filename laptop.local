@@ -2,11 +2,13 @@
 
 fancy_echo "Installing additional brew packages ..."
 brew bundle --file=- <<EOF
+tap "codeclimate/formulae"
 tap "getantibody/tap"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 brew "awscli"
+brew "codeclimate"
 brew "ctags", link: false
 brew "diff-so-fancy"
 brew "getantibody/tap/antibody"

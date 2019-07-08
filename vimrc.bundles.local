@@ -41,3 +41,5 @@ Plug 'Raimondi/delimitMate'
 Plug 'ervandew/supertab'
 " Align things
 Plug 'junegunn/vim-easy-align'
+" Fluent syntax highlighter
+Plug 'projectfluent/fluent.vim'
