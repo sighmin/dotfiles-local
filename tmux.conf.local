@@ -36,6 +36,10 @@ set -g mouse on
 bind -r C-h select-window -t :-
 bind -r C-l select-window -t :+
 
+# Quick window movement
+bind-key -n C-S-Left swap-window -t 0\; select-window -t -1
+bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
+
 # Splitting panes
 bind | split-window -h
 bind - split-window -v
@@ -69,9 +73,6 @@ if-shell '`echo $TMUX | grep -q tmate`' \
 if-shell '`echo $TMUX | grep -q tmate`' \
   "bind -n C-l run \"(tmate display-message -p '#{pane_current_command}' | grep -iqE '(^|\\/)vim(diff)?$' && tmate send-keys C-l) || tmate select-pane -R\"" \
   "bind -n C-l run \"(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\\/)vim(diff)?$' && tmux send-keys C-l) || tmux select-pane -R\""
-if-shell '`echo $TMUX | grep -q tmate`' \
-  "bind -n C-\\ run \"(tmate display-message -p '#{pane_current_command}' | grep -iqE '(^|\\/)vim(diff)?$' && tmate send-keys 'C-\\\\') || tmate select-pane -l\"" \
-  "bind -n C-\\ run \"(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\\/)vim(diff)?$' && tmux send-keys 'C-\\\\') || tmux select-pane -l\""
 
 # loud or quiet?
 set-option -g visual-activity off
