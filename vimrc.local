@@ -70,6 +70,8 @@ let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
 let test#strategy = "tslime"
 let g:tslime_always_current_session = 1
 let g:tslime_always_current_window = 1
+let test#python#pytest#executable = "bin/t"
+let g:test#javascript#mocha#file_pattern = '\vtest.(js|jsx|coffee)$'
 
 """""""""""""""""""""""
 "       Airline       "
@@ -89,8 +91,10 @@ set termguicolors
 """"""""""""""""""""
 "    LocalVimRc    "
 """"""""""""""""""""
-let g:localvimrc_ask = 0
+"let g:localvimrc_ask = 0
 let g:localvimrc_whitelist = $HOME . '/Code/.*'
+"autocmd User LocalVimRCPre  echom 'before loading local vimrc'
+"autocmd User LocalVimRCPost echom 'after loading local vimrc'
 
 """""""""""""""""""""
 "     NERDTree      "
@@ -99,6 +103,12 @@ let g:localvimrc_whitelist = $HOME . '/Code/.*'
 let NERDTreeShowHidden=1
 map <leader>n :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"""""""""""""""""""""
+"     Devicons      "
+"""""""""""""""""""""
+" https://github.com/ryanoasis/vim-devicons
+"set guifont=DroidSansMono_Nerd_Font:h11
 
 """""""""""""""""""""
 "      Tagbar       "
@@ -172,25 +182,26 @@ endif
 let g:airline#extensions#ale#enabled = 1
 let g:ale_sign_error = '→'
 let g:ale_sign_warning = '→'
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0
+let g:ale_lint_on_save = 1
 let g:ale_completion_enabled = 1
 
 let g:ale_fixers = {
 \   'ruby':  [],
 \   'elixir':  [],
-\   'typescript': ['prettier'],
-\   'javascript': ['prettier'],
+\   'typescript': ['standard', 'prettier'],
+\   'javascript': ['standard', 'prettier'],
 \   'jsx': [],
-\   'css': [],
+\   'css': ['stylelint'],
 \   'scss': [],
 \   'go': ['gofmt'],
 \ }
 
 let g:ale_linters = {
-\   'javascript': ['prettier'],
-\   'typescript': ['prettier'],
+\   'javascript': ['standard', 'prettier'],
+\   'typescript': ['standard', 'prettier'],
 \   'jsx': [],
-\   'css': [],
+\   'css': ['stylelint'],
 \   'scss': [],
 \   'elixir': [],
 \   'ruby': [],
@@ -214,9 +225,12 @@ endfunction
 
 call AddLinterIfFileExists('javascript', 'eslint', '.eslintrc.json', 1, 1)
 call AddLinterIfFileExists('javascript', 'eslint', '.eslintrc', 1, 1)
-call AddLinterIfFileExists('javascript', 'standard', 'node_modules/.bin/standard', 1, 1)
-call AddLinterIfFileExists('css', 'stylelint', '.stylelintrc', 1, 1)
-call AddLinterIfFileExists('scss', 'stylelint', '.stylelintrc', 1, 1)
+call AddLinterIfFileExists('javascript', 'standard', '~/.asdf/shims/standard', 1, 1)
+call AddLinterIfFileExists('typescript', 'eslint', '.eslintrc.json', 1, 1)
+call AddLinterIfFileExists('typescript', 'eslint', '.eslintrc', 1, 1)
+call AddLinterIfFileExists('typescript', 'standard', '~/.asdf/shims/standard', 1, 1)
+call AddLinterIfFileExists('css', 'stylelint', '.stylelintrc.json', 1, 1)
+call AddLinterIfFileExists('scss', 'stylelint', '.stylelintrc.json', 1, 1)
 call AddLinterIfFileExists('scss', 'scss-lint', '.scss-lint.yml', 1, 1)
 call AddLinterIfFileExists('ruby', 'rubocop', '.rubocop.yml', 1, 1)
 call AddLinterIfFileExists('elixir', 'credo', 'config/.credo.exs', 1, 0)
@@ -269,9 +283,8 @@ nmap <leader>w :Goyo<CR>
 " Ctrl-p/fzf/ag/rg  "
 """""""""""""""""""""
 " Convenient mappings for CtrlP and ctags
-let g:ctrlp_working_path_mode = 0
-nmap <C-p> :CtrlP<cr>
-nmap <C-t> :CtrlPTag<cr>
+nmap <C-p> :Files<cr>
+nmap <C-t> :Tags<cr>
 nmap <C-i> :BTags<cr>
 
 """""""""""""""""""""
@@ -284,3 +297,46 @@ nmap <leader>ld :LivedownToggle<cr>
 """""""""""""""""""""
 vmap <leader>= :EasyAlign*=<cr>
 au FileType markdown vmap <leader><Bslash> :EasyAlign*<Bar><cr>
+
+autocmd FileType javascript setlocal ts=2 sts=2 sw=2 et
+
+"""""""""""""""""""""
+" CoC Autocomplete  "
+"""""""""""""""""""""
+let g:coc_global_extensions = [ 'coc-tsserver' ]
+
+" Show autocomplete when Tab is pressed
+"inoremap <silent><expr> <Tab> coc#refresh()
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+"""""""""""""""""""""
+" Stored macros
+"""""""""""""""""""""
+
+" Change snake case to lower camel case, example: start_date to startDate on a line
+" Use by replaying the contents of buffer c with @c in normal mode
+let @c = ':s#_\(\l\)#\u\1#g'
+
+" Change snake case to upper camel case, example: start_date to StartDate on a line
+" Use by replaying the contents of buffer v with @v in normal mode
+let @v = ':s#\(\%(\<\l\+\)\%(_\)\@=\)\|_\(\l\)#\u\1\2#g'
+
+"""""""""""""""""""""
+" vim-markdown
+"""""""""""""""""""""
+let g:markdown_fenced_languages = [
+\ 'bash=sh', 'sh',
+\ 'javascript', 'js=javascript', 'json=javascript',
+\ 'typescript', 'ts=typescript',
+\ 'css', 'html',
+\ 'ruby', 'python' ]
