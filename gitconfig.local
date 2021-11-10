@@ -1,6 +1,3 @@
-[user]
-  name = Simon van Dyk
-  email = simon.vandyk@thoughtbot.com
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [color]
@@ -34,7 +31,15 @@
   rb = rebase
   sta = stash
   nuke = !git reset && git checkout -- . && git clean -fd
+  cane = commit --amend --no-edit
+  prune-local = "!git fetch -p && for branch in `git branch -vv | awk '/: gone]/{if ($1!=\"*\") print $1}'`; do git branch -D $branch; done"
+  ignored = !git ls-files -v | grep "^S"
+  ignore = update-index --skip-worktree
+  unignore = update-index --no-skip-worktree
 [credential]
   helper = osxkeychain
 [gpg]
   program = /usr/local/bin/gpg
+[diff "enc"]
+  textconv = rails encrypted:show
+  cachetextconv = false
