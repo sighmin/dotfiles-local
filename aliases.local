@@ -7,4 +7,5 @@ alias vbrc='$EDITOR ~/dotfiles-local/vimrc.bundles.local'
 alias trc='$EDITOR ~/dotfiles-local/tmux.conf.local'
 alias grc='$EDITOR ~/dotfiles-local/gitconfig.local'
 alias :q=exit
-alias ytdl='youtube-dl'
+alias h=tldr
+alias spotify=spt
