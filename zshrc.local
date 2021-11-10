@@ -1,7 +1,12 @@
 # Look for executables in ./bin
 export PATH=./bin:$PATH
+export PATH=./node_modules/.bin:$PATH
+export PATH=/Users/$(whoami)/Library/Android/sdk/emulator:$PATH
 # Kill the lag
 export KEYTIMEOUT=1
+# Set language
+export LANG=en_GB.UTF-8
+export LC_ALL=$LANG
 
 # Autocomplete options...
 # Move cursor to end if word had one match
