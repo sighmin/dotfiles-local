@@ -98,13 +98,6 @@ bindkey '^Z' foreground-vi
 # shellcheck disable=SC1090
 [ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
 
-# Tab autocomplete
-LUNCHY_DIR="$(dirname "$(gem which lunchy)")/../extras"
-# shellcheck disable=SC1090
-if [ -f "$LUNCHY_DIR/lunchy-completion.zsh" ]; then
-  . "$LUNCHY_DIR/lunchy-completion.zsh"
-fi
-
 # Setup zsh-autosuggestions
 # shellcheck disable=SC1090
 . "$HOME/dotfiles-local/vendor/zsh-autosuggestions/zsh-autosuggestions.zsh"
