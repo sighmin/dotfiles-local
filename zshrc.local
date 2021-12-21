@@ -1,7 +1,7 @@
 # Look for executables in ./bin
-export PATH=./bin:$PATH
+export PATH=/opt/homebrew/bin:$PATH
 export PATH=./node_modules/.bin:$PATH
-export PATH=/Users/$(whoami)/Library/Android/sdk/emulator:$PATH
+export PATH=./bin:$PATH
 # Kill the lag
 export KEYTIMEOUT=1
 # Set language
@@ -154,3 +154,5 @@ export SPACESHIP_PROMPT_ORDER=(
   exit_code     # Exit code section
   char          # Prompt character
 )
+
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
