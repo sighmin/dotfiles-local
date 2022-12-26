@@ -88,14 +88,32 @@ let g:test#javascript#mocha#file_pattern = '\vtest.(js|jsx|coffee)$'
 " Configure airline
 "let g:airline_powerline_fonts = 1
 let g:airline_powerline_fonts = 2
+"let g:airline_theme = 'tomorrow'
 let g:airline_theme = 'base16'
 
 """""""""""""""""""""""
 " Color Configuration "
 """""""""""""""""""""""
-set background=light
-colorscheme PaperColor
-set termguicolors
+syntax enable
+" Set the background based on an env var
+let env_background_modifier=$VIM_BACKGROUND_MODIFIER
+if env_background_modifier == 'dark'
+  set background=dark
+else
+  set background=light
+endif
+
+colorscheme solarized
+"colorscheme PaperColor
+"colorscheme tomorrow-night
+
+" Some other nice colorschemes in flazz/vim-colorschemes Plugin
+"colorscheme primary
+"colorscheme tomorrow
+"colorscheme tomorrow-night
+"colorscheme github
+"colorscheme solarized
+"colorscheme PaperColor
 
 """"""""""""""""""""
 "    LocalVimRc    "
