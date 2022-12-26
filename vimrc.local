@@ -52,11 +52,19 @@ command! Wa wall
 command! Wq wq
 
 " Convenient mappings for vim commands
+map <leader>nve :e ~/.config/nvim/init.lua<cr>
 map <leader>ve :e ~/dotfiles-local/vimrc.local<cr>
 map <leader>vbe :e ~/dotfiles-local/vimrc.bundles.local<cr>
 map <leader>te :e ~/dotfiles-local/tmux.conf.local<cr>
 map <leader>ze :e ~/dotfiles-local/zshrc.local<cr>
 map <leader>ge :e ~/dotfiles-local/gitconfig.local<cr>
+" Reload config files from vim
+map <leader>sv :source ~/dotfiles-local/vimrc.local<cr>
+map <leader>snv :source ~/.config/nvim/init.lua<cr>
+map <leader>svb :source ~/dotfiles-local/vimrc.bundles.local<cr>
+map <leader>st :source ~/dotfiles-local/tmux.conf.local<cr>
+map <leader>sz :source ~/dotfiles-local/zshrc.local<cr>
+map <leader>sg :source ~/dotfiles-local/gitconfig.local<cr>
 
 """""""""""""""""""""
 "     Colorizer     "
