@@ -44,3 +44,5 @@
 [diff "enc"]
   textconv = rails encrypted:show
   cachetextconv = false
+[rerere]
+  enabled = true
