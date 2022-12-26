@@ -78,7 +78,8 @@ let g:colorizer_auto_filetype='css,html,scss,slim,sass,less'
 let test#strategy = "tslime"
 let g:tslime_always_current_session = 1
 let g:tslime_always_current_window = 1
-let test#python#pytest#executable = "bin/t"
+"let test#python#pytest#executable = "bin/t"
+let test#ruby#rails#executable = 'bin/run cmd bin/rails test'
 let g:test#javascript#mocha#file_pattern = '\vtest.(js|jsx|coffee)$'
 
 """""""""""""""""""""""
