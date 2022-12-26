@@ -147,13 +147,14 @@ map <leader>b :TagbarToggle<cr>
 "     EasyTags      "
 """""""""""""""""""""
 " Set local tags file for increased speed
-"set tags='./tags'
+"set tags=./tags;
 "let g:easytags_dynamic_files=2
-" Do not automatically update highlights (slows things down)
-"let g:easytags_auto_highlight=0
 "let g:easytags_syntax_keyword = 'always'
-"let g:easytags_auto_highlight = 0
 "let g:easytags_auto_update = 0
+" Update tags asynchronously
+let g:easytags_async = 1
+" Do not automatically update highlights (slows things down)
+let g:easytags_auto_highlight = 0
 let g:easytags_suppress_ctags_warning = 1
 
 """""""""""""""""""""""
