@@ -48,26 +48,14 @@ gpoc() {
 # pull origin current_branch
 gloc() {
   echo "Pulling $(current_branch)"
-  git pull origin "$(current_branch)"
-}
-
-# pull origin master
-glom() {
-  echo Pulling master
-  git pull origin master
-}
-
-# pull origin develop
-glod() {
-  echo Pulling develop
-  git pull origin develop
+  git pull origin "$(current_branch)" "$@"
 }
 
 # create pull request into specified branch (develop if none specified)
 # shellcheck disable=SC2215,SC2006
 function gpr {
   echo "Opening pull request for $(current_branch)"
-  repo=`git remote -v | grep origin | head -1 | sed "s/git@github.com://" | cut -c8-999 | sed "s/\.git .*//"`
+  repo=$(git remote -v | grep origin | head -1 | sed "s/git@github.com://" | cut -c8-999 | sed "s/\.git .*//")
   branch=""
   if [ "$1" ]; then
     branch="$1...$(current_branch)"
@@ -90,20 +78,45 @@ foreground-vi() {
 zle -N foreground-vi
 bindkey '^Z' foreground-vi
 
-# Fuzzy cd with z.sh
-# shellcheck disable=SC1090
-. "$HOME/dotfiles-local/vendor/z.sh"
+# Pairing iterm2 profile switching
+# shellcheck disable=SC2091,SC2086
+function pairing-profile {
+  # Show help and exit
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+  then
+    printf "Usage: pairing-profile [-h|--help] [COLOR_SCHEME]\n\n    Changes the iterm profile setting a different color theme\n for pairing, and updates vim config to use a background color of dark|light\n\n    COLOR_SCHEME: light|dark|unset\n"
+    return 0
+  fi
+
+  # Reset/unset pairing settings
+  if [ "$1" = "unset" ]
+  then
+    $(it2profile -r)
+    unset VIM_BACKGROUND_MODIFIER
+    return 0
+  fi
+
+  # Set iterm profile and configure vim background
+  profile_modifier=$1
+  profile_name="pairing--${profile_modifier:-dark}"
+  $(it2profile -s $profile_name)
+  export VIM_BACKGROUND_MODIFIER=$profile_modifier
+}
+
+# Import iterm shell integration scripts, required for pairing-profile function
+# shellcheck disable=SC1091
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Fuzzy search with fzf
 # shellcheck disable=SC1090
 [ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
 
 # Setup zsh-autosuggestions
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091
 . "$HOME/dotfiles-local/vendor/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # Setup zsh-syntax-highlighting
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091
 . "$HOME/dotfiles-local/vendor/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # I literally only setup antibody so that I could use spaceship prompt.
@@ -148,4 +161,5 @@ export SPACESHIP_PROMPT_ORDER=(
   char          # Prompt character
 )
 
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+# shellcheck disable=SC1091,SC2046
+. $(brew --prefix asdf)/libexec/asdf.sh
