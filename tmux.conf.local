@@ -12,7 +12,7 @@ set -g prefix C-a           # Setting the prefix from C-b to C-a
 unbind C-b                  # Free the original Ctrl-b prefix keybinding
 set -s escape-time 0        # Setting the delay between prefix and command
 bind C-a send-prefix        # Ensure that we can send Ctrl-A to other apps
-setw -g mode-keys vi        # Enable vi keys, duhh
+# setw -g mode-keys vi        # Enable vi keys, duhh (exists in thoughtbot dotfiles defaults)
 setw -g monitor-activity on # Enable activity monitoring & alerts for other windows
 set -g visual-activity on
 
@@ -32,9 +32,12 @@ set -g mouse on
 # WINDOW & PANE MANAGEMENT
 ##############################################################################
 
-# Quick window selection
-bind -r C-h select-window -t :-
-bind -r C-l select-window -t :+
+# Reload tmux config file
+bind r source-file ~/.tmux.conf
+
+# Quick window selection (exists in thoughtbot dotfiles defaults)
+# bind -r C-h select-window -t :-
+# bind -r C-l select-window -t :+
 
 # Quick window movement
 bind-key -n C-S-Left swap-window -t 0\; select-window -t -1
@@ -51,11 +54,11 @@ bind -r J resize-pane -D 5
 bind -r K resize-pane -U 5
 bind -r L resize-pane -R 5
 
-# Moving between panes
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
+# Moving between panes (exists in thoughtbot dotfiles defaults)
+# bind h select-pane -L
+# bind j select-pane -D
+# bind k select-pane -U
+# bind l select-pane -R
 
 # Kill current session
 bind X confirm-before kill-session
