@@ -6,6 +6,8 @@ Plug 'jgdavey/tslime.vim'
 Plug 'embear/vim-localvimrc'
 " Great collection of colour schemes for vim
 Plug 'flazz/vim-colorschemes'
+" One colorscheme
+Plug 'rakr/vim-one'
 " Fuzzy search with fzf: this manages fzf installation as well
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -43,8 +45,6 @@ Plug 'ervandew/supertab'
 Plug 'junegunn/vim-easy-align'
 " Fluent syntax highlighter
 Plug 'projectfluent/fluent.vim'
-" File type glyphs/icons to popular Vim plugins: NERDTree, vim-airline, etc
-Plug 'ryanoasis/vim-devicons'
 " Snippets engine
 Plug 'SirVer/ultisnips'
 " Python static analysis
@@ -56,4 +56,12 @@ Plug 'leafgarland/typescript-vim'
 Plug 'neoclide/coc.nvim' , { 'branch' : 'release' }
 
 " Syntax highlight markdown and embedded 'fenced' code blocks syntax highlighting
-Plug 'tpop/vim-markdown'
+"Plug 'tpop/vim-markdown'
+
+" Experiment integating AI models into development workflow
+"Plug 'madox2/vim-ai', { 'do': './install.sh' }
+Plug 'github/copilot.vim'
+
+" Must be the last plug...
+" File type glyphs/icons to popular Vim plugins: NERDTree, vim-airline, etc
+"Plug 'ryanoasis/vim-devicons'

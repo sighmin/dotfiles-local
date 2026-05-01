@@ -1,12 +1,25 @@
 # Look for executables in ./bin
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=/opt/homebrew/bin:$PATH
 export PATH=./node_modules/.bin:$PATH
-export PATH=./bin:$PATH
+# This messes with Claude Code :(
+#export PATH=./bin:$PATH
+# shellcheck disable=SC1091,SC2046
+#. $(brew --prefix asdf)/libexec/asdf.sh
+export PATH=$HOME/.local/bin:$PATH
 # Kill the lag
 export KEYTIMEOUT=1
 # Set language
 export LANG=en_GB.UTF-8
 export LC_ALL=$LANG
+
+
+# Change ruby warnings level to silence most deprecation warnings. Not a great
+# default but I need it when working on projects with out of date deps.
+export RUBYOPT='-W0'
 
 # Autocomplete options...
 # Move cursor to end if word had one match
@@ -103,6 +116,13 @@ function pairing-profile {
   export VIM_BACKGROUND_MODIFIER=$profile_modifier
 }
 
+# Disable zsh history for this session
+disable_history() {
+  unset  HISTFILE
+  export HISTSIZE=0
+  export SAVEHIST=0
+}
+
 # Import iterm shell integration scripts, required for pairing-profile function
 # shellcheck disable=SC1091
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
@@ -161,5 +181,40 @@ export SPACESHIP_PROMPT_ORDER=(
   char          # Prompt character
 )
 
-# shellcheck disable=SC1091,SC2046
-. $(brew --prefix asdf)/libexec/asdf.sh
+# Increase limit of open files
+# sudo launchctl limit maxfiles 65536 200000
+
+[ -f "$HOME/.zsh_secrets" ] && source "$HOME/.zsh_secrets"
+
+function commit-ai {
+  # Get the diff of the staged changes
+  _commit_diff=$(git diff --cached)
+
+  # Escape the DIFF for JSON
+  _escaped_diff=$(echo "$_commit_diff" | jq -Rs .)
+  _escaped_diff="${_escaped_diff#\"}"
+  _escaped_diff="${_escaped_diff%\"}"
+
+  # Generate a commit message using OpenAI API
+  _commit_message=$(curl -s -X POST https://api.openai.com/v1/chat/completions \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "gpt-4o",
+      "messages": [{
+        "role": "user",
+        "content": "Generate a commit message for the following git diff:\\n\\n'"$_escaped_diff"'"
+      }],
+      "max_tokens": 50,
+      "temperature": 0.75
+    }' | jq -r '.choices[0].message.content')
+
+  # Commit the staged changes with the generated commit message
+  git commit -m "$_commit_message"
+}
+
+. ${HOME}/dotfiles-local/scripts/vibe.sh
+
+# Increase number of open files
+ulimit -n 10240
+

@@ -52,19 +52,19 @@ command! Wa wall
 command! Wq wq
 
 " Convenient mappings for vim commands
-map <leader>nve :e ~/.config/nvim/init.lua<cr>
-map <leader>ve :e ~/dotfiles-local/vimrc.local<cr>
-map <leader>vbe :e ~/dotfiles-local/vimrc.bundles.local<cr>
-map <leader>te :e ~/dotfiles-local/tmux.conf.local<cr>
-map <leader>ze :e ~/dotfiles-local/zshrc.local<cr>
-map <leader>ge :e ~/dotfiles-local/gitconfig.local<cr>
+"map <leader>nve :e ~/.config/nvim/init.lua<cr>
+"map <leader>ve :e ~/dotfiles-local/vimrc.local<cr>
+"map <leader>vbe :e ~/dotfiles-local/vimrc.bundles.local<cr>
+"map <leader>te :e ~/dotfiles-local/tmux.conf.local<cr>
+"map <leader>ze :e ~/dotfiles-local/zshrc.local<cr>
+"map <leader>ge :e ~/dotfiles-local/gitconfig.local<cr>
 " Reload config files from vim
-map <leader>sv :source ~/dotfiles-local/vimrc.local<cr>
-map <leader>snv :source ~/.config/nvim/init.lua<cr>
-map <leader>svb :source ~/dotfiles-local/vimrc.bundles.local<cr>
-map <leader>st :source ~/dotfiles-local/tmux.conf.local<cr>
-map <leader>sz :source ~/dotfiles-local/zshrc.local<cr>
-map <leader>sg :source ~/dotfiles-local/gitconfig.local<cr>
+"map <leader>sv :source ~/dotfiles-local/vimrc.local<cr>
+"map <leader>snv :source ~/.config/nvim/init.lua<cr>
+"map <leader>svb :source ~/dotfiles-local/vimrc.bundles.local<cr>
+"map <leader>st :source ~/dotfiles-local/tmux.conf.local<cr>
+"map <leader>sz :source ~/dotfiles-local/zshrc.local<cr>
+"map <leader>sg :source ~/dotfiles-local/gitconfig.local<cr>
 
 """""""""""""""""""""
 "     Colorizer     "
@@ -79,7 +79,8 @@ let test#strategy = "tslime"
 let g:tslime_always_current_session = 1
 let g:tslime_always_current_window = 1
 "let test#python#pytest#executable = "bin/t"
-let test#ruby#rails#executable = 'bin/run cmd bin/rails test'
+"let test#ruby#rails#executable = 'bin/run cmd bin/rails test'
+let test#ruby#rails#executable = 'bin/rails test'
 let g:test#javascript#mocha#file_pattern = '\vtest.(js|jsx|coffee)$'
 
 """""""""""""""""""""""
@@ -89,12 +90,22 @@ let g:test#javascript#mocha#file_pattern = '\vtest.(js|jsx|coffee)$'
 "let g:airline_powerline_fonts = 1
 let g:airline_powerline_fonts = 2
 "let g:airline_theme = 'tomorrow'
-let g:airline_theme = 'base16'
+"let g:airline_theme = 'base16'
+let g:airline_theme = 'one'
 
 """""""""""""""""""""""
 " Color Configuration "
 """""""""""""""""""""""
 syntax enable
+
+" Enable true color support
+if has("termguicolors")
+  set termguicolors
+endif
+
+" Enable italics support for vim-one
+let g:one_allow_italics = 1
+
 " Set the background based on an env var
 let env_background_modifier=$VIM_BACKGROUND_MODIFIER
 if env_background_modifier == 'dark'
@@ -103,9 +114,11 @@ else
   set background=light
 endif
 
-colorscheme solarized
+"colorscheme solarized
 "colorscheme PaperColor
 "colorscheme tomorrow-night
+"colorscheme onedark
+colorscheme one
 
 " Some other nice colorschemes in flazz/vim-colorschemes Plugin
 "colorscheme primary
@@ -136,6 +149,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 """""""""""""""""""""
 " https://github.com/ryanoasis/vim-devicons
 "set guifont=DroidSansMono_Nerd_Font:h11
+"set guifont=Meslo_LG_M_DZ_for_Powerline:h11
 
 """""""""""""""""""""
 "      Tagbar       "
@@ -368,3 +382,119 @@ let g:markdown_fenced_languages = [
 \ 'typescript', 'ts=typescript',
 \ 'css', 'html',
 \ 'ruby', 'python' ]
+
+
+"""""""""""""""""""""
+" vim-ai
+"""""""""""""""""""""
+" https://github.com/madox2/vim-ai
+"
+" Command :AI
+"
+" :AI - complete the text on the current line
+" :AI {prompt} - complete the prompt
+" <selection> :AI - complete the selection
+" <selection> :AI {instruction} - complete the selection using the instruction
+
+" Command :AIEdit
+"
+" <selection>? :AIEdit - edit the current line or the selection
+" <selection>? :AIEdit {instruction} - edit the current line or the selection using the instruction
+
+" Command :AIChat
+"
+" :AIChat - continue or start a new conversation.
+" <selection>? :AIChat {instruction}? - start a new conversation given the selection, the instruction or both
+" When the model finishes answering, you can continue the conversation by entering insert mode, adding your prompt, and then using the command :AIChat once again.
+
+" complete text on the current line or in visual selection
+nnoremap <leader>a :AI<CR>
+xnoremap <leader>a :AI<CR>
+
+" edit text with a custom prompt
+xnoremap <leader>e :AIEdit fix this code<CR>
+nnoremap <leader>e :AIEdit fix this code<CR>
+
+" trigger chat
+xnoremap <leader>c :AIChat<CR>
+nnoremap <leader>c :AIChat<CR>
+
+" redo last AI command
+"nnoremap <leader>r :AIRedo<CR>
+
+"" :AI
+" - options: openai config (see https://platform.openai.com/docs/api-reference/completions)
+" - engine: complete | chat - see how to configure chat engine in the section below
+let g:vim_ai_complete = {
+\  "engine": "complete",
+\  "options": {
+\    "model": "text-davinci-003",
+\    "temperature": 0.1,
+\    "request_timeout": 20,
+\  },
+\}
+
+" :AIEdit
+" - options: openai config (see https://platform.openai.com/docs/api-reference/completions)
+" - engine: complete | chat - see how to configure chat engine in the section below
+let g:vim_ai_edit = {
+\  "engine": "complete",
+\  "options": {
+\    "model": "text-davinci-003",
+\    "temperature": 0.1,
+\    "request_timeout": 20,
+\  },
+\}
+
+" :AIChat
+" - options: openai config (see https://platform.openai.com/docs/api-reference/chat)
+" - options.initial_prompt: prompt prepended to every chat request
+" - ui.populate_options: put [chat-options] to the chat header
+" - ui.open_chat_command: customize how to open chat window
+let g:vim_ai_chat = {
+\  "options": {
+\    "model": "gpt-3.5-turbo",
+\    "temperature": 1,
+\    "request_timeout": 20
+\  },
+\  "ui": {
+\    "code_syntax_enabled": 1,
+\    "populate_options": 0,
+\    "open_chat_command": "tabnew | call vim_ai#MakeScratchWindow()",
+\  },
+\}
+
+"let initial_prompt =<< trim END
+">>> system
+"
+"You are going to play a role of a completion engine with following parameters:
+"Task: Provide compact code/text completion, generation, transformation or explanation
+"Topic: general programming and text editing
+"Style: Plain result without any commentary, unless commentary is necessary
+"Audience: Users of text editor and programmers that need to transform/generate text
+"END
+"
+"let chat_engine_config = {
+"\  "engine": "chat",
+"\  "options": {
+"\    "model": "gpt-3.5-turbo",
+"\    "max_tokens": 1000,
+"\    "temperature": 0.1,
+"\    "request_timeout": 20,
+"\    "initial_prompt": initial_prompt,
+"\  },
+"\}
+"
+"let g:vim_ai_complete = chat_engine_config
+"let g:vim_ai_edit = chat_engine_config
+
+" Tips:
+" "open_chat_command":
+" - "below new /tmp/last_conversation.aichat" - restore converstaion from a file
+" - "open_chat_command": "tabnew | call vim_ai#MakeScratchWindow()" - open chat in a new tab
+
+"""""""""""""""""""""
+" GH Copilot
+"""""""""""""""""""""
+" imap <silent><script><expr> <C-g> copilot#Accept("\<CR>")
+" let g:copilot_no_tab_map = v:true
